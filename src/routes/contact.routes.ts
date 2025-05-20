@@ -1,8 +1,12 @@
 import express from 'express';
-import { syncContacts } from '../controllers/contact.controller';
+import {
+  getContactList,
+  updateContactList,
+} from '../controllers/contact.controller';
 
 const router = express.Router();
 
-router.get('/sync', syncContacts);
+router.get('/list', getContactList);
+router.get('/update', updateContactList);
 
 export default router;
