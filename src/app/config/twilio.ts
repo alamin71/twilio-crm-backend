@@ -50,8 +50,8 @@ export const twilioConfig = {
   accountSid: process.env.TWILIO_ACCOUNT_SID || '',
   authToken: process.env.TWILIO_AUTH_TOKEN || '',
   phoneNumber: process.env.TWILIO_PHONE_NUMBER || '',
-  postUrl: process.env.POST_CALL_STATUS_URL || '', // Call Started, Ended, Notes পাঠানোর URL
-  getUrl: process.env.GET_CONTACTS_URL || '', // Contact list এর জন্য GET API URL
+  postUrl: process.env.POST_CALL_STATUS_URL || '',
+  getUrl: process.env.GET_CONTACTS_URL || '',
 };
 
 export const twilioClient = Twilio(

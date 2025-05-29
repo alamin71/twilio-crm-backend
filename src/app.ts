@@ -4,6 +4,7 @@ import contactRoutes from './routes/contact.routes';
 import callRoutes from './routes/call.routes';
 import authRoutes from './routes/auth.routes';
 import smsRoutes from './routes/sms.routes';
+import twilioRoutes from './routes/call.routes';
 
 const app: Application = express();
 const allowedOrigins = [
@@ -25,8 +26,7 @@ const corsOptions = {
 // cors middleware MUST be used before your routes
 app.use(cors(corsOptions));
 
-// middleware
-app.use(express.json());
+app.use(express.urlencoded({ extended: false }));
 app.use(cors());
 
 app.get('/', (req: Request, res: Response) => {
@@ -45,9 +45,13 @@ app.post('/twilio/voice', (req: Request, res: Response) => {
 });
 
 // routes
+app.use(express.json());
+
 app.use('/api/contacts', contactRoutes);
 app.use('/api/call', callRoutes);
 app.use('/api/auth', authRoutes);
 app.use('/api/sms', smsRoutes);
+
+app.use('/api/twilio', twilioRoutes);
 
 export default app;
