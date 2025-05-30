@@ -25,6 +25,7 @@ export const initiateCall = async (req: Request, res: Response) => {
     if (!dbUser) return res.status(404).json({ error: 'User not found' });
 
     const voiceWebhookUrl = `${process.env.PUBLIC_VOICE_URL}?to=${encodeURIComponent(toNumber)}`;
+    console.log(voiceWebhookUrl);
 
     const call = await startCall(
       toNumber,

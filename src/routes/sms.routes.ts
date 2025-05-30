@@ -1,6 +1,6 @@
 import express from 'express';
-import { sendMessage, smsWebhookHandler } from '../controllers/sms.controller';
-// import { sendMessage, smsWebhookHandler } from './sms.controller';
+import { sendMessage } from '../services/sms.service';
+import { smsWebhookHandler } from '../controllers/sms.controller';
 
 const router = express.Router();
 

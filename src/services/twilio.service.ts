@@ -14,6 +14,10 @@ const startCall = async (
 
   const client = Twilio(userTwilioSid, userTwilioToken);
 
+  console.log(userTwilioSid);
+  console.log(userTwilioToken);
+  console.log(twimlUrl);
+
   const call = await client.calls.create({
     url: twimlUrl,
     to,
@@ -21,8 +25,8 @@ const startCall = async (
     statusCallback: statusCallbackUrl,
     statusCallbackMethod: 'POST',
     statusCallbackEvent: ['initiated', 'ringing', 'answered', 'completed'],
-    record: true,
-    transcribe: true,
+    record: false,
+    // transcribe: true,
   });
 
   return call;
