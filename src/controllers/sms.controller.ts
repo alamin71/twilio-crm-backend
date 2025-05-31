@@ -34,6 +34,8 @@ export const sendMessageController = async (req: Request, res: Response) => {
       customerCompanyName || '',
     );
 
+    console.log(savedMessage);
+
     res.status(200).json({ success: true, message: savedMessage });
   } catch (error: any) {
     console.error('Error sending SMS:', error);

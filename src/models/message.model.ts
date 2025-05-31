@@ -9,7 +9,7 @@ const MessageSchema = new Schema({
   direction: { type: String, enum: ['inbound', 'outbound'], required: true },
   status: {
     type: String,
-    enum: ['sent', 'delivered', 'failed'],
+    enum: ['sent', 'delivered', 'failed', 'queued'],
     default: 'sent',
   },
   read: { type: Boolean, default: false },

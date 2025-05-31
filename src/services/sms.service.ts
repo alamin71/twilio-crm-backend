@@ -16,21 +16,42 @@ export const sendMessage = async (
   customerFullName: string = '400 - New Contact',
   customerCompanyName: string = '',
 ) => {
+  if (!twilioSid || !twilioToken) {
+    throw new Error('Twilio SID and Token are required');
+  }
+  if (!fromNumber || !toNumber) {
+    throw new Error('From and To phone numbers are required');
+  }
+  if (!body) {
+    throw new Error('Message body is required');
+  }
+
+  // Initialize Twilio client
   const client = Twilio(twilioSid, twilioToken);
-  const msgOptions: any = { body, from: fromNumber, to: toNumber };
+
+  const msgOptions: {
+    body: string;
+    from: string;
+    to: string;
+    mediaUrl?: string[];
+  } = {
+    body,
+    from: fromNumber,
+    to: toNumber,
+  };
 
   if (mediaUrls.length > 0) {
     msgOptions.mediaUrl = mediaUrls;
   }
 
   try {
-    // make massage from twilio
+    // Send message using Twilio
     const message = await client.messages.create(msgOptions);
 
-    // Conversation ID ফর্ম্যাট — দুই নম্বর sort করে হ্যান্ডেল করা
+    // Create a conversation ID by sorting the numbers
     const conversationId = [fromNumber, toNumber].sort().join('-');
 
-    // send massage clinent api
+    // Prepare payload for client API
     const payload = {
       request: 'SMS Message',
       message_sid: message.sid,
@@ -42,12 +63,19 @@ export const sendMessage = async (
       message: body,
       run_ai: true,
     };
-    await axios.post(CLIENT_API_URL, payload, {
-      headers: { 'Content-Type': 'application/json' },
-    });
 
-    // massage save to database
-    return await MessageModel.create({
+    try {
+      // Send to client API - may fail but should not block saving message
+      await axios.post(CLIENT_API_URL, payload, {
+        headers: { 'Content-Type': 'application/json' },
+      });
+    } catch (axiosError) {
+      console.error('Error posting to client API:', axiosError);
+      // You may choose to proceed or throw error here depending on your logic
+    }
+
+    // Save message in DB
+    const savedMessage = await MessageModel.create({
       conversationId,
       from: fromNumber,
       to: toNumber,
@@ -60,9 +88,13 @@ export const sendMessage = async (
         ? new Date(message.dateCreated)
         : new Date(),
     });
+
+    return savedMessage;
   } catch (error) {
-    console.error('Error in sendMessage:', error);
-    throw error;
+    console.error('Error sending Twilio message:', error);
+    throw new Error(
+      `Failed to send message: ${error instanceof Error ? error.message : error}`,
+    );
   }
 };
 
