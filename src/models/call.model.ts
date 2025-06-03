@@ -39,6 +39,7 @@
 // const CallModel = mongoose.model<ICall>('Call', callSchema);
 
 // export default CallModel;
+
 import mongoose, { Document, Schema } from 'mongoose';
 
 export interface ICall extends Document {
